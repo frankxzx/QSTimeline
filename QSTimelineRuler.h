@@ -19,6 +19,7 @@
 @interface QSTimelineRuler : UIView
 
 @property(nonatomic, weak) id <QSTimelineRuler> qs_delegate;
-@property(nonatomic, strong) NSDate *birthday;
+
+-(instancetype)initWithBirthday:(NSDate *)birthday frame:(CGRect)frame;
 
 @end
