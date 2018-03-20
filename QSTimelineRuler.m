@@ -8,6 +8,7 @@
 
 #import "QSTimelineRuler.h"
 
+
 @interface QSTimelineRuler()
 
 @property(nonatomic, strong) QSTimelineScrollView *scrollView;
@@ -27,13 +28,16 @@
 
 -(void)initialize {
     self.scrollView = [[QSTimelineScrollView alloc]initWithFrame:self.bounds];
+    self.scrollView.markers = [self markers];
     [self addSubview:self.scrollView];
+    [self.layer addSublayer:[self pointLayer]];
 }
 
 -(void)layoutSubviews {
     [super layoutSubviews];
 }
 
+//游标
 -(CALayer *)pointLayer {
     CGFloat w = [UIScreen mainScreen].bounds.size.width;
     CGFloat h = 54.0;
@@ -67,6 +71,22 @@
     shape.strokeColor = [UIColor whiteColor].CGColor;
     
     return shape;
+}
+
+-(NSMutableArray <QSTimelineMarker *>*)markers {
+    NSInteger offSet = 5;
+    NSDate *begin = [self.birthday dateBySubtractingYears:offSet];
+    NSDate *end = [[self.birthday dateByAddingYears:100]dateByAddingYears:offSet];
+    NSDateComponents *increment = [NSDateComponents yearsWithCount:1];
+    NSArray <NSDate *>* dates = [NSDate datesFrom:begin to:end increment:increment];
+    NSMutableArray <QSTimelineMarker *>*markers = [NSMutableArray array];
+    for (NSDate *date in dates) {
+        QSTimelineMarker *marker = [[QSTimelineMarker alloc]initWithDate:date
+                                                                birthday:self.birthday
+                                                                   range:QSTimelineYear];
+        [markers addObject:marker];
+    }
+    return markers;
 }
 
 @end

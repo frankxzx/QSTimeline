@@ -31,11 +31,19 @@
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
+    self.scrollView.backgroundColor = [UIColor brownColor];
+    CGFloat offSet = [UIScreen mainScreen].bounds.size.width / 2;
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, offSet, 0, offSet);
     [self addSubview:self.scrollView];
     [self setUpPinchGesture: self.scrollView];
-    
     self.timelineLayer = [[QSTimelineLayer alloc]init];
-    [self.layer addSublayer:self.timelineLayer];
+    [self.scrollView.layer addSublayer:self.timelineLayer];
+}
+
+-(void)setMarkers:(NSMutableArray<QSTimelineMarker *> *)markers {
+    _markers = markers;
+    [self.timelineLayer setMarkers:markers];
+    [self.timelineLayer reload];
 }
 
 -(void)layoutSubviews {
@@ -96,11 +104,13 @@
 
 -(void)pinchDidZoom:(QSTimelineGesture *)sender {
     self.currentScale = sender.scale - self.lastScale;
-    [self paddingIncrease:self.currentScale];
+    [self changePaddingScale:self.currentScale];
 }
 
--(void)paddingIncrease:(CGFloat)scale {
-    
+-(void)changePaddingScale:(CGFloat)scale {
+    for (QSTimelineMarker *marker in self.markers) {
+        marker.padding *= scale;
+    }
     [self.timelineLayer reload];
 }
 

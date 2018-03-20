@@ -36,7 +36,9 @@
     self.contents = (__bridge id)img.CGImage;
 }
 
+//绘制刻度和文字
 -(void)drawMarkerWith:(QSTimelineMarker *)marker atPosition:(CGFloat)position inContext:(CGContextRef)context {
+    UIGraphicsPushContext(context);
     NSDictionary *textAttributes = [self textAttributesWith:marker.font color:marker.color];
     CGSize textSize = [marker.text sizeWithAttributes:textAttributes];
     
@@ -46,8 +48,14 @@
     CGContextSetFillColorWithColor(context, marker.color.CGColor);
     CGContextFillRect(context, markerRect);
     if (marker.isLabelVisible) {
+        //圆角背景
+        [[[UIColor blackColor]colorWithAlphaComponent:0.2] setFill];
+        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect: CGRectInset(markerTextRect, -5, -2)  cornerRadius:5.0];
+        [bezierPath fill];
+        
         [marker.text drawInRect:markerTextRect withAttributes:textAttributes];
     }
+    UIGraphicsPopContext();
 }
 
 -(CGRect)markRectWith:(CGFloat)position marker:(QSTimelineMarker *)marker {
@@ -59,7 +67,7 @@
 
 -(CGRect)markTextRectWith:(CGFloat)position textSize:(CGSize)textSize marker:(QSTimelineMarker *)marker {
     return CGRectMake(position - (textSize.width/2),
-                      0,
+                      (self.frame.size.height - marker.size.height - textSize.height)/2,
                       textSize.width,
                       textSize.height);
 }

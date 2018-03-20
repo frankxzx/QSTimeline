@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NSDate+timeline.h"
 
 typedef NS_ENUM(NSUInteger, QSTimelineRange) {
     QSTimelineYear,
@@ -16,14 +17,18 @@ typedef NS_ENUM(NSUInteger, QSTimelineRange) {
 
 @interface QSTimelineMarker : NSObject
 
-@property(nonatomic, assign) BOOL isLabelVisible;
-@property(nonatomic, assign) BOOL isKey;
-@property(nonatomic, assign) QSTimelineRange type;
-@property(nonatomic, assign, readonly) CGSize size;
-@property(nonatomic, strong, readonly) UIColor *color;
-@property(nonatomic, strong, readonly) UIFont *font;
+@property(nonatomic, assign, readonly) BOOL isLabelVisible;
+@property(nonatomic, assign, readonly) BOOL isKey;
+@property(nonatomic, assign) QSTimelineRange range;
+@property(nonatomic, assign) CGSize size;
+@property(nonatomic, strong) UIColor *color;
+@property(nonatomic, strong) UIFont *font;
 @property(nonatomic, copy) NSString *text;
 @property(nonatomic, assign) CGFloat padding;
 @property(nonatomic, strong) NSDate *date;
+
+-(instancetype)initWithDate:(NSDate *)date
+                   birthday:(NSDate *)birthday
+                      range:(QSTimelineRange)range;
 
 @end
